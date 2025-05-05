@@ -1,0 +1,20 @@
+<!-- <h1>Sentiment Analysis for {{ campaign.title }}</h1>
+<p><strong>Sentiment:</strong> {{ sentiment }}</p> -->
+
+
+
+{% extends "base.html" %}
+
+{% block title %}Analyze Sentiment{% endblock %}
+
+{% block content %}
+    <h1>Sentiment Analysis</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ campaign.title }}</h5>
+            <p class="card-text">{{ campaign.description }}</p>
+            <p><strong>Sentiment:</strong> {{ sentiment }}</p>
+        </div>
+    </div>
+    <a href="{{ url_for('get_recommended_campaigns') }}" class="btn btn-primary mt-3">Back to Campaigns</a>
+{% endblock %}

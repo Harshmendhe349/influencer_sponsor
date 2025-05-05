@@ -7,7 +7,11 @@ Flask Login and Registration System through SQLite.
 ### Note : Install Python and Postman for your system
 ```pip install virtualenv```
 
-```source bin/activate```
+python3 -m venv venv
+
+
+source venv/bin/activate
+
 
 ```pip install flask flask-sqlalchemy flask-login```
 ### Export 
@@ -33,3 +37,11 @@ http://localhost:5000
 ![alt text](https://user-images.githubusercontent.com/16520789/71319725-f2463280-24c7-11ea-9e73-729dd79c6681.png "Node File Explorer")
 ![alt text](https://user-images.githubusercontent.com/16520789/71319729-fffbb800-24c7-11ea-9cad-a62dd1dd5509.png "Node File Explorer")
 ![alt text](https://user-images.githubusercontent.com/16520789/71319732-0ab64d00-24c8-11ea-99f2-189e753519b8.png "Node File Explorer")
+
+
+
+
+
+curl -X GET http://127.0.0.1:5000/influencers
+curl -X GET http://127.0.0.1:5000/sponors
+

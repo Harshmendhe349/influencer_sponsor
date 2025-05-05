@@ -1,0 +1,61 @@
+<!-- <h1>Recommended Campaigns</h1>
+<ul>
+    {% for campaign in campaigns %}
+    <li>{{ campaign.title }} - {{ campaign.category }}</li>
+    {% endfor %}
+</ul> -->
+
+
+
+<!-- templates/recommend_campaigns.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommended Campaigns</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Find Campaigns Tailored For You</h2>
+    <form id="recommendForm">
+        <label>Category:
+            <input type="text" name="category" id="category" required>
+        </label>
+        <label>Niche:
+            <input type="text" name="niche" id="niche">
+        </label>
+        <button type="submit">Get Recommendations</button>
+    </form>
+
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('recommendForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            fetch("/recommend_campaigns", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    category: document.getElementById('category').value,
+                    niche: document.getElementById('niche').value
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const results = document.getElementById('results');
+                results.innerHTML = "<h3>Recommended Campaigns:</h3>" +
+                    data.map(camp => `
+                        <div class="card">
+                            <p><strong>${camp.name}</strong></p>
+                            <p>Category: ${camp.category}</p>
+                            <p>Niche: ${camp.niche}</p>
+                            <p>Budget: ${camp.budget}</p>
+                            <p>Match Score: ${camp.score}</p>
+                        </div>
+                    `).join('');
+            });
+        });
+    </script>
+</body>
+</html>
+

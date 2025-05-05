@@ -1,0 +1,61 @@
+<!-- <h1>Recommended Influencers for {{ campaign.title }}</h1>
+<ul>
+    {% for influencer in influencers %}
+    <li>{{ influencer.name }} - {{ influencer.category }}</li>
+    {% endfor %}
+</ul> -->
+
+
+
+<!-- templates/recommend_influencers.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommended Influencers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Find Top Influencers for Your Campaign</h2>
+    <form id="recommendForm">
+        <label>Category:
+            <input type="text" name="category" id="category" required>
+        </label>
+        <label>Niche:
+            <input type="text" name="niche" id="niche">
+        </label>
+        <button type="submit">Get Recommendations</button>
+    </form>
+
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('recommendForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            fetch("/recommend_influencers", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    category: document.getElementById('category').value,
+                    niche: document.getElementById('niche').value
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const results = document.getElementById('results');
+                results.innerHTML = "<h3>Recommended Influencers:</h3>" +
+                    data.map(inf => `
+                        <div class="card">
+                            <p><strong>${inf.name}</strong></p>
+                            <p>Category: ${inf.category}</p>
+                            <p>Niche: ${inf.niche}</p>
+                            <p>Followers: ${inf.followers}</p>
+                            <p>Engagement Rate: ${inf.engagement_rate}%</p>
+                            <p>Match Score: ${inf.score}</p>
+                        </div>
+                    `).join('');
+            });
+        });
+    </script>
+</body>
+</html>

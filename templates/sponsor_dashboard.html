@@ -1,0 +1,181 @@
+{% extends 'layout.html' %}
+{% block title %}Sponsor Dashboard{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-3">Sponsor Dashboard</h1>
+    <p class="lead">Welcome, {{ current_user.username }}!</p>
+
+    <!-- Notification Center -->
+    <div class="alert alert-info d-flex justify-content-between align-items-center">
+        <div>
+            <strong>Notifications:</strong> 
+            {% set new_requests = 0 %}
+            {% for campaign in campaigns %}
+                {% for request in campaign.ad_requests %}
+                    {% if request.status == 'pending' %}
+                        {% set new_requests = new_requests + 1 %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            {% if new_requests > 0 %}
+                You have <strong>{{ new_requests }}</strong> new ad request{{ 's' if new_requests > 1 }}.
+            {% else %}
+                No new notifications.
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="campaigns-tab" data-toggle="tab" href="#campaigns" role="tab">My Campaigns</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="adrequests-tab" data-toggle="tab" href="#adrequests" role="tab">Ad Requests</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="dashboardTabsContent">
+        <!-- Campaigns Tab -->
+        <div class="tab-pane fade show active" id="campaigns" role="tabpanel">
+            <div class="form-group">
+                <label for="categoryFilter">Filter by Category:</label>
+                <select class="form-control" id="categoryFilter">
+                    <option value="all">All</option>
+                    {% for campaign in campaigns %}
+                        <option value="{{ campaign.category }}">{{ campaign.category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="row" id="campaignList">
+                {% for campaign in campaigns %}
+                <div class="col-md-6 mb-4 campaign-item" data-category="{{ campaign.category }}">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ campaign.title }}</h5>
+                            <p class="card-text">{{ campaign.description }}</p>
+                            <p><strong>Budget:</strong> ${{ campaign.budget }}</p>
+                            <p><strong>Category:</strong> {{ campaign.category }}</p>
+                            <p><strong>Created:</strong> {{ campaign.created_at.strftime('%Y-%m-%d') }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% if campaigns|length == 0 %}
+                <p>You have no campaigns.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Ad Requests Tab -->
+        <div class="tab-pane fade" id="adrequests" role="tabpanel">
+            {% for campaign in campaigns %}
+                {% if campaign.ad_requests %}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <strong>{{ campaign.title }}</strong> - {{ campaign.category }}
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            {% for request in campaign.ad_requests %}
+                            <li class="list-group-item">
+                                <p>
+                                    <strong>Influencer:</strong> 
+                                    <a href="#" data-toggle="modal" data-target="#influencerModal{{ request.id }}">
+                                        {{ request.influencer.username }}
+                                    </a>
+                                </p>
+                                <p><strong>Status:</strong> 
+                                    <span class="badge badge-{% if request.status == 'accepted' %}success{% elif request.status == 'rejected' %}danger{% elif request.status == 'negotiating' %}warning{% else %}secondary{% endif %}">
+                                        {{ request.status.capitalize() }}
+                                    </span>
+                                </p>
+                                <p><strong>Received:</strong> {{ request.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+
+                                {% if request.status == 'pending' %}
+                                <form action="{{ url_for('handle_sponsor_ad_request', ad_request_id=request.id) }}" method="POST">
+                                    <div class="btn-group mb-2">
+                                        <button type="submit" name="action" value="accept" class="btn btn-sm btn-success">Accept</button>
+                                        <button type="submit" name="action" value="reject" class="btn btn-sm btn-danger">Reject</button>
+                                        <button type="button" class="btn btn-sm btn-warning" data-toggle="collapse" data-target="#negotiate{{ request.id }}">Negotiate</button>
+                                    </div>
+                                    <div id="negotiate{{ request.id }}" class="collapse">
+                                        <input type="text" name="terms" class="form-control mb-2" placeholder="Enter negotiation terms">
+                                        <button type="submit" name="action" value="negotiate" class="btn btn-primary btn-sm">Send Negotiation</button>
+                                    </div>
+                                </form>
+                                {% endif %}
+                            </li>
+
+                            <!-- Influencer Profile Modal -->
+                            <div class="modal fade" id="influencerModal{{ request.id }}" tabindex="-1" role="dialog" aria-labelledby="influencerModalLabel{{ request.id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="influencerModalLabel{{ request.id }}">Influencer Profile</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- In the modal -->
+                                            <p><strong>Username:</strong> {{ request.influencer.username }}</p>
+                                            <p><strong>Email:</strong> {{ request.influencer.email }}</p>
+                                            <p><strong>Category:</strong> {{ request.influencer_profile.category }}</p>
+                                            <p><strong>Niche:</strong> {{ request.influencer_profile.niche }}</p>
+                                            <p><strong>Reach:</strong> {{ request.influencer_profile.reach }}</p>
+                                            <p><strong>Engagement Rate:</strong> {{ request.influencer_profile.engagement_rate }}%</p>
+                                            <p><strong>Bio:</strong> {{ request.influencer_profile.bio or 'N/A' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("categoryFilter").addEventListener("change", function () {
+        const value = this.value.toLowerCase();
+        const campaigns = document.querySelectorAll(".campaign-item");
+        campaigns.forEach(c => {
+            const cat = c.getAttribute("data-category").toLowerCase();
+            c.style.display = (value === "all" || cat === value) ? "block" : "none";
+        });
+    });
+</script>
+
+<style>
+    .badge-success { background-color: #28a745; }
+    .badge-danger { background-color: #dc3545; }
+    .badge-warning { background-color: #ffc107; color: #000; }
+    .badge-secondary { background-color: #6c757d; }
+
+    .card {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .nav-tabs .nav-link.active {
+        font-weight: bold;
+    }
+
+    .modal-body p {
+        margin-bottom: 0.5rem;
+    }
+
+    .alert {
+        font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+        .card-title {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+{% endblock %}

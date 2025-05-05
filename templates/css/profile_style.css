@@ -1,0 +1,50 @@
+/* profile_styles.css */
+
+.container {
+    max-width: 700px; /* Adjusted width for a more compact layout */
+    padding: 2rem; /* Add padding around the container */
+}
+
+h2 {
+    font-size: 1.75rem; /* Slightly smaller font size for better alignment */
+    color: #333; /* Darker color for better readability */
+    font-weight: 600; /* Slightly bolder text */
+}
+
+.form-group {
+    margin-bottom: 1.5rem; /* Space between form groups */
+}
+
+.form-group label {
+    font-weight: 500; /* Make labels slightly bolder */
+}
+
+.form-control {
+    border-radius: 0.5rem; /* Rounded corners */
+    border: 1px solid #ced4da; /* Subtle border */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Light shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for focus effect */
+    max-width: 100%; /* Ensure it doesn't exceed container width */
+    width: 100%; /* Full width of its parent container */
+}
+
+.form-control:focus {
+    border-color: #007bff; /* Blue border on focus */
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25); /* Blue shadow on focus */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Primary button background color */
+    border-color: #007bff; /* Matching border color */
+    border-radius: 0.5rem; /* Rounded corners */
+    font-size: 1rem; /* Normal font size */
+    padding: 0.5rem 1rem; /* Adjusted padding for a more compact button */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition on hover */
+    width: auto; /* Adjust width based on content */
+    display: inline-block; /* Align with text */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    border-color: #0056b3; /* Matching border color */
+}

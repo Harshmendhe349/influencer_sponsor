@@ -1,0 +1,119 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Search for Campaigns</h2>
+    
+    <form action="{{ url_for('search_campaigns') }}" method="GET" class="search-form mb-4">
+        <div class="form-group">
+            <label for="category">Category</label>
+            <input type="text" id="category" name="category" class="form-control" style="max-width: 500px;"> <!-- Adjusted width -->
+        </div>
+        <div class="form-group">
+            <label for="budget">Budget</label>
+            <input type="number" id="budget" name="budget" class="form-control" style="max-width: 500px;"> <!-- Adjusted width -->
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    
+    {% if campaigns %}
+        <h3 class="mb-4">Campaigns</h3>
+        <div class="row">
+            {% for campaign in campaigns %}
+                <div class="col-md-4 mb-4">
+                    <div class="card campaign-card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ campaign.title }}</h5>
+                            <p class="card-text"><strong>Description:</strong> {{ campaign.description }}</p>
+                            <p class="card-text"><strong>Budget:</strong> ${{ campaign.budget }}</p>
+                            <p class="card-text"><strong>Category:</strong> {{ campaign.category }}</p>
+                            <p class="card-text"><strong>Created At:</strong> {{ campaign.created_at.strftime('%Y-%m-%d') }}</p>
+                            <form action="{{ url_for('send_ad_request', campaign_id=campaign.id) }}" method="POST">
+                                <input type="hidden" name="influencer_id" value="{{ current_user.id }}">
+                                <button type="submit" class="btn btn-primary">Send Ad Request</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No campaigns found matching your criteria.</p>
+    {% endif %}
+</div>
+
+<style>
+    .container {
+        max-width: 1500px; /* Increased max width for the container */
+    }
+
+    h2, h3 {
+        font-size: 1.75rem;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .search-form {
+        margin-bottom: 2rem;
+    }
+
+    .search-form .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-control {
+        border-radius: 0.5rem;
+        border: 1px solid #ced4da;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .form-control:focus {
+        border-color: #8b68c7;
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #8564be;
+        border-color: #8b68c7;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #815ac4;
+        border-color: #8b68c7;
+    }
+
+    .card {
+        border-radius: 0.5rem;
+        border: 1px solid #ced4da;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease, transform 0.3s ease; /* Added transform for scaling effect */
+        width: 100%; /* Ensures cards take the full width of their column */
+        min-width: 300px; /* Sets a minimum width for the cards */
+    }
+
+    .card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transform: scale(1.03); /* Slightly scale up on hover */
+    }
+
+    .campaign-card {
+        overflow: hidden;
+    }
+
+    .row {
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+    }
+
+    .col-md-4 {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,249 @@
+{% extends 'layout.html' %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('flag_users') }}">Flag Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('flag_campaigns') }}">Flag Campaigns</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<style>
+    
+    body {
+        background-color: #f8f9fa;
+        background: radial-gradient(circle, #63489a, #e2e6ea);
+    }
+
+    .container {
+        width: 1500px;
+        margin-top: 100px; /* Adjust top margin to avoid navbar overlap */
+        margin-left: 90px;
+    }
+
+    h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        border-radius: 0.75rem;
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        color: #007bff;
+    }
+
+    .card-text {
+        font-size: 1.125rem;
+    }
+
+    .list-group-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+    }
+
+    .list-group-item-danger {
+        background-color: #f8d7da; /* Light red background for flagged items */
+    }
+
+    .badge-danger {
+        background-color: #dc3545; /* Red for flagged badge */
+    }
+
+    .btn-warning {
+        margin-left: 5px;
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .btn-warning:hover {
+        background-color: #e0a800;
+        border-color: #d39e00;
+    }
+
+    input[type="text"] {
+        border-radius: 0.2rem;
+        border: 1px solid #ced4da;
+        padding: 5px;
+        width: auto;
+    }
+
+    input[type="text"]:focus {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+</style>
+
+<div class="container mt-5 pt-4" style="max-width: 1200px;">
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <!-- All Users -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">All Users ({{ users|length }})</h5>
+                    {% if users %}
+                        <ul class="list-group">
+                            {% for user in users %}
+                                <li class="list-group-item {% if user.is_flagged %}list-group-item-danger{% endif %}">
+                                    <span>{{ user.username }} ({{ user.role }})</span>
+                                    {% if user.is_flagged %}
+                                        <span class="badge badge-danger">Flagged: {{ user.flag_reason }}</span>
+                                    {% else %}
+                                        <form action="{{ url_for('flag_user', user_id=user.id) }}" method="POST" style="display: flex; align-items: center;">
+                                            <input type="text" name="reason" placeholder="Reason for flagging" required>
+                                            <button type="submit" class="btn btn-warning btn-sm">Flag User</button>
+                                        </form>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No users found.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- All Campaigns -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">All Campaigns ({{ campaigns|length }})</h5>
+                    {% if campaigns %}
+                        <ul class="list-group">
+                            {% for campaign in campaigns %}
+                                <li class="list-group-item {% if campaign.is_flagged %}list-group-item-danger{% endif %}">
+                                    <span>{{ campaign.title }}</span>
+                                    {% if campaign.is_flagged %}
+                                        <span class="badge badge-danger">Flagged: {{ campaign.flag_reason }}</span>
+                                    {% else %}
+                                        <form action="{{ url_for('flag_campaign', campaign_id=campaign.id) }}" method="POST" style="display: flex; align-items: center;">
+                                            <input type="text" name="reason" placeholder="Reason for flagging" required>
+                                            <button type="submit" class="btn btn-warning btn-sm">Flag Campaign</button>
+                                        </form>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No campaigns found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="row">
+                <!-- Active Users -->
+                <div class="col-md-12 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Active Users</h5>
+                            <p class="card-text">{{ active_users }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campaign Statistics -->
+                <div class="col-md-12 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Campaigns Overview</h5>
+                            <p class="card-text">Total Campaigns: {{ total_campaigns }}</p>
+                            <p class="card-text">Public Campaigns: {{ public_campaigns }}</p>
+                            <p class="card-text">Private Campaigns: {{ private_campaigns }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ad Requests -->
+                <div class="col-md-12 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Ad Requests</h5>
+                            <p class="card-text">Total Ad Requests: {{ ad_requests | length }}</p>
+                            <p class="card-text">Pending: {{ ad_requests | selectattr('status', 'equalto', 'pending') | list | length }}</p>
+                            <p class="card-text">Accepted: {{ ad_requests | selectattr('status', 'equalto', 'accepted') | list | length }}</p>
+                            <p class="card-text">Rejected: {{ ad_requests | selectattr('status', 'equalto', 'rejected') | list | length }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

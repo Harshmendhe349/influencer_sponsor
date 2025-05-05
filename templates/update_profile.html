@@ -1,0 +1,263 @@
+
+
+
+
+{% extends 'layout.html' %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+<style>
+    .update-profile-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        color: #343a40;
+    }
+
+    .form-section-header {
+        background: #f1f1f1;
+        padding: 0.75rem 1rem;
+        border-left: 5px solid #007bff;
+        font-weight: bold;
+        color: #007bff;
+        margin-bottom: 1rem;
+        border-radius: 5px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 0.4rem;
+    }
+
+    .form-group label i {
+        color: #007bff;
+        margin-right: 6px;
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .form-col-half {
+        flex: 0 0 48%;
+    }
+
+    .profile-preview {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #ced4da;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="update-profile-container">
+    <h2><i class="bi bi-person-circle"></i> Update Profile</h2>
+
+    <form action="{{ url_for('update_profile') }}" method="POST" enctype="multipart/form-data">
+        
+        {% if current_user.role == 'sponsor' %}
+        <div class="form-section-header">Sponsor Information</div>
+
+        <!-- Company Logo Upload -->
+        <div class="form-group text-center">
+            {% if sponsor.logo_url %}
+                <img src="{{ sponsor.logo_url }}" alt="Company Logo" class="profile-preview">
+            {% endif %}
+            <input type="file" name="company_logo" class="form-control-file">
+            <small class="text-muted">Upload your company logo (jpg/png)</small>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group form-col-half">
+                <label><i class="bi bi-building"></i> Company Name</label>
+                <input type="text" name="company_name" class="form-control" value="{{ sponsor.company_name or '' }}">
+            </div>
+            <div class="form-group form-col-half">
+                <label><i class="bi bi-person"></i> Individual Name</label>
+                <input type="text" name="individual_name" class="form-control" value="{{ sponsor.individual_name or '' }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-briefcase-fill"></i> Industry</label>
+            <select name="industry" class="form-control">
+                <option value="">-- Select Industry --</option>
+                <option value="tech" {% if sponsor.industry == 'tech' %}selected{% endif %}>Technology</option>
+                <option value="fashion" {% if sponsor.industry == 'fashion' %}selected{% endif %}>Fashion</option>
+                <option value="finance" {% if sponsor.industry == 'finance' %}selected{% endif %}>Finance</option>
+                <option value="gaming" {% if sponsor.industry == 'gaming' %}selected{% endif %}>Gaming</option>
+                <option value="health" {% if sponsor.industry == 'health' %}selected{% endif %}>Health & Wellness</option>
+                <option value="automotive" {% if sponsor.industry == 'automotive' %}selected{% endif %}>Automotive</option>
+                <option value="travel" {% if sponsor.industry == 'travel' %}selected{% endif %}>Travel & Tourism</option>
+                <option value="education" {% if sponsor.industry == 'education' %}selected{% endif %}>Education</option>
+                <option value="food" {% if sponsor.industry == 'food' %}selected{% endif %}>Food & Beverage</option>
+                <option value="sports" {% if sponsor.industry == 'sports' %}selected{% endif %}>Sports & Fitness</option>
+                <option value="entertainment" {% if sponsor.industry == 'entertainment' %}selected{% endif %}>Entertainment</option>
+                <option value="real_estate" {% if sponsor.industry == 'real_estate' %}selected{% endif %}>Real Estate</option>
+                <option value="beauty" {% if sponsor.industry == 'beauty' %}selected{% endif %}>Beauty & Cosmetics</option>
+                <option value="home_decor" {% if sponsor.industry == 'home_decor' %}selected{% endif %}>Home Decor</option>
+                <option value="ecommerce" {% if sponsor.industry == 'ecommerce' %}selected{% endif %}>E-commerce</option>
+                <option value="art" {% if sponsor.industry == 'art' %}selected{% endif %}>Art & Design</option>
+                <option value="photography" {% if sponsor.industry == 'photography' %}selected{% endif %}>Photography</option>
+                <option value="pets" {% if sponsor.industry == 'pets' %}selected{% endif %}>Pet Products</option>
+                <option value="parenting" {% if sponsor.industry == 'parenting' %}selected{% endif %}>Parenting</option>
+                <option value="music" {% if sponsor.industry == 'music' %}selected{% endif %}>Music</option>
+                <option value="non_profit" {% if sponsor.industry == 'non_profit' %}selected{% endif %}>Non-Profit</option>
+                <option value="luxury" {% if sponsor.industry == 'luxury' %}selected{% endif %}>Luxury Goods</option>
+                <option value="books" {% if sponsor.industry == 'books' %}selected{% endif %}>Books & Publishing</option>
+                <option value="events" {% if sponsor.industry == 'events' %}selected{% endif %}>Events & Conferences</option>
+                <option value="sustainability" {% if sponsor.industry == 'sustainability' %}selected{% endif %}>Sustainability</option>
+                <option value="cybersecurity" {% if sponsor.industry == 'cybersecurity' %}selected{% endif %}>Cybersecurity</option>
+                <option value="agriculture" {% if sponsor.industry == 'agriculture' %}selected{% endif %}>Agriculture</option>
+                <option value="law" {% if sponsor.industry == 'law' %}selected{% endif %}>Legal Services</option>
+                <option value="insurance" {% if sponsor.industry == 'insurance' %}selected{% endif %}>Insurance</option>
+                <option value="blockchain" {% if sponsor.industry == 'blockchain' %}selected{% endif %}>Blockchain & Crypto</option>
+                <option value="telecom" {% if sponsor.industry == 'telecom' %}selected{% endif %}>Telecommunications</option>
+                <option value="freelance" {% if sponsor.industry == 'freelance' %}selected{% endif %}>Freelance & Gig Economy</option>
+            </select>
+            
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-wallet2"></i> Budget (in USD)</label>
+            <input type="number" name="budget" class="form-control" value="{{ sponsor.budget or '' }}">
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-file-earmark-text"></i> Company Bio</label>
+            <textarea name="bio" class="form-control" rows="4" placeholder="Describe your brand...">{{ sponsor.bio or '' }}</textarea>
+        </div>
+
+        {% elif current_user.role == 'influencer' %}
+        <div class="form-section-header">Influencer Information</div>
+
+        <!-- Profile Picture Upload -->
+        <div class="form-group text-center">
+            {% if influencer.profile_picture %}
+                <img src="{{ influencer.profile_picture }}" alt="Profile Picture" class="profile-preview">
+            {% endif %}
+            <input type="file" name="profile_picture" class="form-control-file">
+            <small class="text-muted">Upload a profile photo (jpg/png)</small>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group form-col-half">
+                <label><i class="bi bi-person-bounding-box"></i> Name</label>
+                <input type="text" name="name" class="form-control" value="{{ influencer.name or '' }}">
+            </div>
+            <div class="form-group form-col-half">
+                <label><i class="bi bi-globe-americas"></i> Location</label>
+                <input type="text" name="location" class="form-control" value="{{ influencer.location or '' }}">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group form-col-half">
+                <label><i class="bi bi-tags"></i> Category</label>
+                <select name="category" class="form-control">
+                    <option value="">-- Select Category --</option>
+                    <option value="beauty" {% if influencer.category == 'beauty' %}selected{% endif %}>Beauty</option>
+                    <option value="fitness" {% if influencer.category == 'fitness' %}selected{% endif %}>Fitness</option>
+                    <option value="tech" {% if influencer.category == 'tech' %}selected{% endif %}>Tech</option>
+                    <option value="fashion" {% if influencer.category == 'fashion' %}selected{% endif %}>Fashion</option>
+                    <option value="gaming" {% if influencer.category == 'gaming' %}selected{% endif %}>Gaming</option>
+                    <option value="lifestyle" {% if influencer.category == 'lifestyle' %}selected{% endif %}>Lifestyle</option>
+                    <option value="travel" {% if influencer.category == 'travel' %}selected{% endif %}>Travel</option>
+                    <option value="food" {% if influencer.category == 'food' %}selected{% endif %}>Food & Cooking</option>
+                    <option value="health" {% if influencer.category == 'health' %}selected{% endif %}>Health & Wellness</option>
+                    <option value="education" {% if influencer.category == 'education' %}selected{% endif %}>Education</option>
+                    <option value="finance" {% if influencer.category == 'finance' %}selected{% endif %}>Finance</option>
+                    <option value="parenting" {% if influencer.category == 'parenting' %}selected{% endif %}>Parenting</option>
+                    <option value="music" {% if influencer.category == 'music' %}selected{% endif %}>Music</option>
+                    <option value="photography" {% if influencer.category == 'photography' %}selected{% endif %}>Photography</option>
+                    <option value="art" {% if influencer.category == 'art' %}selected{% endif %}>Art & Design</option>
+                    <option value="sports" {% if influencer.category == 'sports' %}selected{% endif %}>Sports</option>
+                    <option value="automotive" {% if influencer.category == 'automotive' %}selected{% endif %}>Automotive</option>
+                    <option value="pets" {% if influencer.category == 'pets' %}selected{% endif %}>Pets & Animals</option>
+                    <option value="home_decor" {% if influencer.category == 'home_decor' %}selected{% endif %}>Home Decor</option>
+                    <option value="books" {% if influencer.category == 'books' %}selected{% endif %}>Books & Literature</option>
+                    <option value="spirituality" {% if influencer.category == 'spirituality' %}selected{% endif %}>Spirituality</option>
+                    <option value="motivation" {% if influencer.category == 'motivation' %}selected{% endif %}>Motivation & Self-help</option>
+                    <option value="sustainability" {% if influencer.category == 'sustainability' %}selected{% endif %}>Sustainability</option>
+                    <option value="DIY" {% if influencer.category == 'DIY' %}selected{% endif %}>DIY & Crafts</option>
+                    <option value="career" {% if influencer.category == 'career' %}selected{% endif %}>Career & Development</option>
+                    <option value="relationships" {% if influencer.category == 'relationships' %}selected{% endif %}>Relationships</option>
+                    <option value="luxury" {% if influencer.category == 'luxury' %}selected{% endif %}>Luxury Lifestyle</option>
+                    <option value="skincare" {% if influencer.category == 'skincare' %}selected{% endif %}>Skincare</option>
+                    <option value="makeup" {% if influencer.category == 'makeup' %}selected{% endif %}>Makeup</option>
+                    <option value="productivity" {% if influencer.category == 'productivity' %}selected{% endif %}>Productivity</option>
+                    <option value="language" {% if influencer.category == 'language' %}selected{% endif %}>Language & Culture</option>
+                </select>
+                
+            </div>
+            <div class="form-group form-col-half">
+                <label><i class="bi bi-bullseye"></i> Niche</label>
+                <input type="text" name="niche" class="form-control" value="{{ influencer.niche or '' }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-people"></i> Followers / Reach</label>
+            <input type="number" name="reach" class="form-control" value="{{ influencer.reach or '' }}">
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-bar-chart-line"></i> Engagement Rate (%)</label>
+            <input type="number" step="0.01" name="engagement_rate" class="form-control" value="{{ influencer.engagement_rate or '' }}">
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-instagram"></i> Instagram Handle</label>
+            <input type="text" name="instagram" class="form-control" value="{{ influencer.instagram or '' }}">
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-youtube"></i> YouTube Channel</label>
+            <input type="text" name="youtube" class="form-control" value="{{ influencer.youtube or '' }}">
+        </div>
+
+        <div class="form-group">
+            <label><i class="bi bi-chat-left-dots"></i> Content Types</label>
+            <div class="form-check">
+                <input type="checkbox" name="content_types" value="reels" class="form-check-input" id="reels">
+                <label class="form-check-label" for="reels">Reels</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" name="content_types" value="shorts" class="form-check-input" id="shorts">
+                <label class="form-check-label" for="shorts">YouTube Shorts</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" name="content_types" value="posts" class="form-check-input" id="posts">
+                <label class="form-check-label" for="posts">Feed Posts</label>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary mt-3">
+                <i class="bi bi-save2"></i> Update Profile
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

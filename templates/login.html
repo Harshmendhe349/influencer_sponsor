@@ -1,47 +1,219 @@
 {% extends 'layout.html' %}
 {% block content %}
-<style>
-    body{
-        background: coral;
-    }
-.myblock{
-    border:1px solid black;
-    border-radius: 4%;
-    background: rgba(0,0,0,0.5);
-    margin-top:20%;
-    padding:3%;
-}
-.h1{
-    margin-bottom:5% ;
-    color:coral;
-}
-.mybtn{
- background: rgba(0,0,0,0.5);
-}
 
+<!-- Bootstrap & Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+  body {
+    background: linear-gradient(135deg, #ede7f6, #f3e5f5);
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .login-wrapper {
+    max-width: 500px;
+    margin: 5% auto;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  .form-floating > label {
+    padding: 1rem 0.75rem;
+  }
+
+  .login-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #673ab7;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .mybtn {
+    background-color: #7e57c2;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    transition: 0.3s ease;
+  }
+
+  .mybtn:hover {
+    background-color: #5e35b1;
+  }
+
+  .form-hint {
+    font-size: 0.85rem;
+    color: #777;
+    margin-top: 0.25rem;
+  }
+
+  .password-meter {
+    height: 6px;
+    width: 100%;
+    border-radius: 5px;
+    margin-top: 0.25rem;
+    background-color: #e0e0e0;
+    overflow: hidden;
+  }
+
+  .password-meter-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1055;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .dark-mode {
+    background-color: #121212 !important;
+    color: #e1e1e1 !important;
+  }
 </style>
+
 <div class="container">
-    <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-12"></div>
-        <div class="col-lg-6 col-md-6 col-sm-12 myblock">
-            <h1 class="h1">Login Form</h1>
-            <form action="/login" method="POST" class="form-group">
-            
-            <div class="form-group">
-                <input type="email" name="email" placeholder="Email" class="form-control">
+  <div class="login-wrapper">
+    <div class="login-title">Login to Your Account</div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="toast-container">
+          {% for category, message in messages %}
+            <div class="toast align-items-center text-bg-{{ category }} border-0 show" role="alert">
+              <div class="d-flex">
+                <div class="toast-body">{{ message }}</div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+              </div>
             </div>
-            <div class="form-group">
-                <input type="password" name="password" placeholder="Password" class="form-control">
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-block btn-dark mybtn">Submit</button>
-                <a href="/signup" class="btn btn-block btn-dark  mybtn link">Signup</a>
-            </div>
-            </form>
+          {% endfor %}
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-12"></div>
-    </div>
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('get_login') }}" method="POST" id="loginForm">
+      <!-- Email -->
+      <div class="form-floating mb-3">
+        <input type="email" name="email" class="form-control" id="email" placeholder="name@example.com" required autofocus>
+        <label for="email"><i class="bi bi-envelope"></i> Email address</label>
+      </div>
+
+      <!-- Password -->
+      <div class="form-floating mb-2">
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+        <label for="password"><i class="bi bi-lock"></i> Password</label>
+      </div>
+      <div class="password-meter"><div id="passwordMeter" class="password-meter-fill bg-danger"></div></div>
+
+      <!-- Show/hide password -->
+      <div class="form-check form-switch my-2">
+        <input class="form-check-input" type="checkbox" role="switch" id="togglePassword">
+        <label class="form-check-label" for="togglePassword">Show password</label>
+      </div>
+
+      <!-- Role -->
+      <div class="form-floating mb-3">
+        <select name="role" class="form-select" id="roleSelect" required>
+          <option value="" disabled selected>Select your role</option>
+          <option value="admin">Admin</option>
+          <option value="sponsor">Sponsor</option>
+          <option value="influencer">Influencer</option>
+        </select>
+        <label for="roleSelect"><i class="bi bi-person-badge"></i> Role</label>
+      </div>
+      <div id="roleInfo" class="form-hint mb-3"></div>
+
+      <!-- reCAPTCHA placeholder -->
+      <!-- <div class="mb-3">[ reCAPTCHA would go here ]</div> -->
+
+      <button type="submit" class="btn mybtn" id="loginBtn">
+        <span id="loginText">Login</span>
+        <span id="loginSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+      </button>
+
+      <div class="text-center mt-3">
+        <a href="{{ url_for('get_signup') }}" class="link">Don't have an account? Sign up</a>
+        <br>
+        <a href="#" class="link">Forgot your password?</a>
+      </div>
+    </form>
+  </div>
 </div>
 
+<script>
+  // Password toggle
+  document.getElementById("togglePassword").addEventListener("change", function () {
+    const pwd = document.getElementById("password");
+    pwd.type = this.checked ? "text" : "password";
+  });
+
+  // Password strength meter
+  document.getElementById("password").addEventListener("input", function () {
+    const meter = document.getElementById("passwordMeter");
+    const val = this.value;
+    let score = 0;
+    if (val.length > 5) score += 25;
+    if (/[A-Z]/.test(val)) score += 25;
+    if (/[0-9]/.test(val)) score += 25;
+    if (/[^A-Za-z0-9]/.test(val)) score += 25;
+
+    meter.style.width = score + "%";
+    meter.className = "password-meter-fill";
+    meter.classList.add(score < 50 ? "bg-danger" : score < 75 ? "bg-warning" : "bg-success");
+  });
+
+  // Smart role info
+  const roleSelect = document.getElementById("roleSelect");
+  const roleInfo = document.getElementById("roleInfo");
+  roleSelect.addEventListener("change", function () {
+    const role = this.value;
+    localStorage.setItem("lastRole", role);
+    roleInfo.textContent = {
+      admin: "Admins can manage the entire platform.",
+      sponsor: "Sponsors can create and manage campaigns.",
+      influencer: "Influencers can apply and earn through campaigns."
+    }[role] || "";
+  });
+
+  // Restore last role
+  document.addEventListener("DOMContentLoaded", () => {
+    const lastRole = localStorage.getItem("lastRole");
+    if (lastRole) {
+      roleSelect.value = lastRole;
+      roleSelect.dispatchEvent(new Event("change"));
+    }
+  });
+
+  // Button spinner
+  document.getElementById("loginForm").addEventListener("submit", function () {
+    const btn = document.getElementById("loginBtn");
+    document.getElementById("loginText").classList.add("d-none");
+    document.getElementById("loginSpinner").classList.remove("d-none");
+    btn.disabled = true;
+  });
+
+  // Dark mode persistence
+  document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+  });
+</script>
 
 {% endblock %}

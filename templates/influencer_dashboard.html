@@ -1,0 +1,99 @@
+{% extends 'layout.html' %}
+{% block title %}Influencer Dashboard{% endblock %}
+{% block content %}
+<style>
+    body {
+        background-color: #f5f3ff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+    }
+
+    .container h1 {
+        text-align: center;
+        color: #8361bd;
+        font-size: 32px;
+        font-weight: bold;
+        margin-top: 40px;
+    }
+
+    .myblock {
+        background-color: #e8eaf6;
+        border-radius: 35px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-top: 30px;
+    }
+
+    .myblock h3 {
+        font-size: 24px;
+        color: #926fcd;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .list-group-item {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .list-group-item h5 {
+        font-size: 20px;
+        color: #7e57c2;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .list-group-item p {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    .no-requests {
+        font-size: 18px;
+        color: #555;
+        text-align: center;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<div class="container">
+    <h1>Influencer Dashboard</h1>
+    <p class="text-center">Welcome, {{ current_user.username }}!</p>
+    
+    <div class="myblock">
+        <h3>My Ad Requests</h3>
+        {% if ad_requests %}
+            <ul class="list-group">
+                {% for request in ad_requests %}
+                    <li class="list-group-item">
+                        <h5>Campaign: {{ request.campaign.title }}</h5>
+                        <p><strong>Sponsor:</strong> {{ request.campaign.sponsor.username }}</p>
+                        <p><strong>Status:</strong> {{ request.status }}</p>
+                        <p><strong>Created At:</strong> {{ request.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-requests">You have not sent any ad requests.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 
+
+
+
+
+
+
+
+
+
+

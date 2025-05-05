@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+    <h2>Ad Requests for Campaign: {{ campaign.title }}</h2>
+
+    {% if ad_requests %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Influencer Name</th>
+                    <th>Category</th>
+                    <th>Niche</th>
+                    <th>Platform</th>
+                    <th>Reach</th>
+                    <th>Followers</th>
+                    <th>Engagement Rate</th>
+                    <th>Status</th>
+                    <th>Terms</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in ad_requests %}
+                    <tr>
+                        <td>{{ req.influencer.name }}</td>
+                        <td>{{ req.influencer.category }}</td>
+                        <td>{{ req.influencer.niche }}</td>
+                        <td>{{ req.influencer.platform }}</td>
+                        <td>{{ req.influencer.reach }}</td>
+                        <td>{{ req.influencer.followers }}</td>
+                        <td>{{ req.influencer.engagement_rate }}%</td>
+                        <td>{{ req.ad_request.status }}</td>
+                        <td>{{ req.ad_request.terms if req.ad_request.terms else 'N/A' }}</td>
+                        <td>{{ req.ad_request.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>
+                            {% if current_user.role == 'sponsor' %}
+                                {% if req.ad_request.status == 'pending' %}
+                                    <form action="{{ url_for('handle_sponsor_ad_request', ad_request_id=req.ad_request.id) }}" method="POST">
+                                        <button type="submit" name="action" value="accept" class="btn btn-success">Accept</button>
+                                        <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+                                        <input type="text" name="terms" placeholder="Enter negotiation terms" class="form-control">
+                                        <button type="submit" name="action" value="negotiate" class="btn btn-warning">Negotiate</button>
+                                    </form>
+                                {% else %}
+                                    No actions available
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No ad requests for this campaign.</p>
+    {% endif %}
+</div>
+{% endblock %}

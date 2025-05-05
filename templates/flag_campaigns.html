@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm fixed-top">
+    <a class="navbar-brand" href="#">Flag Campaigns</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('flag_users') }}">Flag Users</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('flag_campaigns') }}">Flag Campaigns</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-5 pt-4"> 
+    <h2 class="mb-4">Flagged Campaigns</h2>
+
+    {% if campaigns %}
+        <ul class="list-group">
+            {% for campaign in campaigns %}
+                <li class="list-group-item {% if campaign.is_flagged %}list-group-item-danger{% endif %} d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ campaign.title }}</strong>
+                        {% if campaign.is_flagged %}
+                            <span class="badge badge-danger ml-2">Flagged: {{ campaign.flag_reason }}</span>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">No flagged campaigns found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

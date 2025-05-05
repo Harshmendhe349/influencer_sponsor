@@ -1,0 +1,386 @@
+<!-- {% extends 'layout.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Influencer Recommendation</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    .loader {
+      display: none;
+      margin: 15px auto;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .text-danger {
+      color: red;
+    }
+    .text-center {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>AI Influencer Recommendation</h2> -->
+
+<!-- Sponsor Selection -->
+<!-- <label for="sponsor">Select Sponsor:</label>
+  <select id="sponsor">
+    <option value="1">Sponsor A</option>
+    <option value="2">Sponsor B</option>
+    <option value="3">Sponsor C</option>
+  </select> -->
+
+<!-- Category & Niche Selection -->
+<!-- <label for="category">Select Category:</label>
+  <select id="category">
+    <option value="Tech">Tech</option>
+    <option value="Fitness">Fitness</option>
+    <option value="Gaming">Gaming</option>
+    <option value="Fashion">Fashion</option>
+  </select>
+
+  <label for="niche">Select Niche (optional):</label>
+  <select id="niche">
+    <option value="">-- None --</option>
+    <option value="Gadgets">Gadgets</option>
+    <option value="Bodybuilding">Bodybuilding</option>
+    <option value="PC">PC</option>
+    <option value="Console">Console</option>
+  </select> -->
+
+<!-- AI Recommendation Button -->
+<!-- <button id="recommend-btn">Get AI Recommendations</button> -->
+
+<!-- Loader -->
+<!-- <div class="loader" id="loadingSpinner"></div> -->
+
+<!-- Recommendations Table -->
+<!-- <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Niche</th>
+        <th>Followers</th>
+        <th>Engagement Rate</th>
+      </tr>
+    </thead>
+    <tbody id="recommendationTableBody">
+      <tr><td colspan="5" class="text-center">No recommendations yet.</td></tr>
+    </tbody>
+  </table> -->
+
+
+
+
+<!-- </body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+{% extends 'layout.html' %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Influencer Recommendation</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    .loader {
+      display: none;
+      margin: 15px auto;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .text-danger {
+      color: red;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .error-message {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>AI Influencer Recommendation</h2>
+
+  <!-- Sponsor Selection -->
+  <label for="sponsor">Select Sponsor:</label>
+  <select id="sponsor">
+    <option value="1">Sponsor A</option>
+    <option value="2">Sponsor B</option>
+    <option value="3">Sponsor C</option>
+  </select>
+
+  <!-- Category & Niche Selection -->
+  <label for="category">Select Category:</label>
+  <select id="category">
+    <option value="Tech">Tech</option>
+    <option value="Fitness">Fitness</option>
+    <option value="Gaming">Gaming</option>
+    <option value="Fashion">Fashion</option>
+  </select>
+
+  <label for="niche">Select Niche (optional):</label>
+  <select id="niche">
+    <option value="">-- None --</option>
+    <option value="Gadgets">Gadgets</option>
+    <option value="Bodybuilding">Bodybuilding</option>
+    <option value="PC">PC</option>
+    <option value="Console">Console</option>
+  </select>
+
+  <!-- AI Recommendation Button -->
+  <button id="recommend-btn">Get AI Recommendations</button>
+
+  <!-- Loader -->
+  <div class="loader" id="loadingSpinner"></div>
+
+  <!-- Error Message (in case of failure) -->
+  <div id="error-message" class="error-message" style="display: none;"></div>
+
+  <!-- Recommendations Table -->
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Niche</th>
+        <th>Followers</th>
+        <th>Engagement Rate</th>
+      </tr>
+    </thead>
+    <tbody id="recommendationTableBody">
+      <tr>
+        <td colspan="5" class="text-center">No recommendations yet.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendation System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Button for Recommending Influencers -->
+    <button id="recommend-btn">Recommend Influencers</button>
+
+    <!-- Button for Recommending Campaigns -->
+    <button id="recommend-campaigns-btn">Recommend Campaigns</button>
+
+    <!-- AI-based Recommendations Section -->
+    <h2>AI-based Recommendations</h2>
+    <button id="ai-suggestions-btn">Get AI Suggestions</button>
+
+    <div id="recommendations"></div>
+    <div id="campaigns"></div>
+    <div id="ai-suggestions"></div>
+
+    <div id="loadingSpinner" style="display:none;">Loading...</div>
+
+    <script>
+        document.getElementById('recommend-btn').addEventListener('click', function() {
+            const sponsorId = 1;  // Replace with actual sponsor_id
+            const category = "tech";  // Replace with actual category
+            const niche = "gadgets";  // Replace with actual niche
+
+            fetch('/recommend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    sponsor_id: sponsorId,
+                    category: category,
+                    niche: niche
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    const recommendationsDiv = document.getElementById('recommendations');
+                    recommendationsDiv.innerHTML = '<h3>Recommended Influencers:</h3>';
+                    data.recommendations.forEach(influencer => {
+                        recommendationsDiv.innerHTML += `
+                            <p>${influencer.name} - Category: ${influencer.category}, Niche: ${influencer.niche}</p>
+                        `;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        document.getElementById('recommend-campaigns-btn').addEventListener('click', function() {
+            const category = "tech";  // Replace with actual category
+            const niche = "gadgets";  // Replace with actual niche
+
+            fetch('/recommend_campaigns', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    category: category,
+                    niche: niche
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    const campaignsDiv = document.getElementById('campaigns');
+                    campaignsDiv.innerHTML = '<h3>Recommended Campaigns:</h3>';
+                    data.forEach(campaign => {
+                        campaignsDiv.innerHTML += `
+                            <p>${campaign.name} - Category: ${campaign.category}, Niche: ${campaign.niche}, Budget: ${campaign.budget}</p>
+                        `;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        document.getElementById('ai-suggestions-btn').addEventListener('click', function() {
+            const category = "tech";  // Replace with actual category
+            const niche = "gadgets";  // Replace with actual niche
+
+            fetch('/recommend_influencers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    category: category,
+                    niche: niche
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    const aiSuggestionsDiv = document.getElementById('ai-suggestions');
+                    aiSuggestionsDiv.innerHTML = '<h3>AI-based Influencer Suggestions:</h3>';
+                    data.forEach(influencer => {
+                        aiSuggestionsDiv.innerHTML += `
+                            <p>${influencer.name} - Category: ${influencer.category}, Niche: ${influencer.niche}, Followers: ${influencer.followers}, Engagement Rate: ${influencer.engagement_rate}</p>
+                        `;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+
+</html>

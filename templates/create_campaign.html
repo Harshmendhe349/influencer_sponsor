@@ -1,0 +1,331 @@
+{% extends 'layout.html' %}
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #f7f9fc;
+    }
+
+    .create-campaign-container {
+        max-width: 700px;
+        padding: 2rem;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.6s ease-out;
+        margin: 2rem auto;
+        border: 1px solid #ced4da;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    h2 {
+        font-size: 1.9rem;
+        color: #343a40;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 2rem;
+        animation: slideIn 0.6s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    label {
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .form-control {
+        border-radius: 0.5rem;
+        transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .form-control:focus {
+        border-color: #8b68c7;
+        box-shadow: 0 0 0 0.2rem rgba(139, 104, 199, 0.3);
+    }
+
+    .form-check-label {
+        font-size: 0.95rem;
+    }
+
+    .btn-primary {
+        background-color: #8b68c7;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        padding: 0.6rem 2rem;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 0.5rem;
+    }
+
+    .form-group i {
+        margin-right: 8px;
+        color: #8b68c7;
+    }
+
+    .budget-hint {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+</style>
+
+<div class="create-campaign-container">
+    <h2><i class="bi bi-megaphone"></i> Create a New Campaign</h2>
+    <form action="{{ url_for('create_campaign') }}" method="POST" enctype="multipart/form-data">
+
+        <!-- Title -->
+        <div class="form-group">
+            <label for="title"><i class="bi bi-type"></i> Campaign Title</label>
+            <input type="text" id="title" name="title" class="form-control" required>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            <label for="description"><i class="bi bi-chat-square-dots"></i> Description</label>
+            <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <!-- Objectives -->
+        <div class="form-group">
+            <label for="objectives"><i class="bi bi-bullseye"></i> Campaign Objectives</label>
+            <select id="objectives" name="objectives[]" class="form-control" multiple>
+                <option value="brand_awareness">Brand Awareness</option>
+                <option value="engagement">Engagement</option>
+                <option value="sales">Sales</option>
+                <option value="lead_generation">Lead Generation</option>
+                <option value="app_installs">App Installs</option>
+                <!-- Additional Objectives -->
+                <option value="website_traffic">Website Traffic</option>
+                <option value="follower_growth">Follower Growth</option>
+                <option value="content_creation">Content Creation</option>
+                <option value="video_views">Video Views</option>
+                <option value="user_generated_content">User Generated Content (UGC)</option>
+                <option value="contest_participation">Contest Participation</option>
+                <option value="product_launch">Product Launch</option>
+                <option value="subscription_signups">Subscription Signups</option>
+                <option value="store_visits">Store Visits (Online/In-Person)</option>
+                <option value="email_list_growth">Email List Growth</option>
+                <option value="product_reviews">Product Reviews</option>
+                <option value="loyalty_program_enrollment">Loyalty Program Enrollment</option>
+            </select>
+
+            <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple</small>
+        </div>
+
+        <!-- Budget -->
+        <div class="form-group">
+            <label for="budget"><i class="bi bi-cash-stack"></i> Budget</label>
+            <input type="number" id="budget" name="budget" class="form-control" required>
+            <small id="budget-estimate" class="form-text budget-hint">An estimate will be calculated based on budget
+                input.</small>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+            <label for="category"><i class="bi bi-tags"></i> Category</label>
+            <select id="category" name="category" class="form-control" required>
+                <option value="tech">Technology</option>
+                <option value="fashion">Fashion</option>
+                <option value="food">Food & Beverage</option>
+                <option value="fitness">Fitness & Sports</option>
+                <option value="beauty">Beauty & Cosmetics</option>
+                <option value="travel">Travel & Hospitality</option>
+                <option value="finance">Finance</option>
+                <option value="automotive">Automotive</option>
+                <option value="gaming">Gaming</option>
+                <option value="education">Education</option>
+                <option value="health">Health & Wellness</option>
+                <option value="real_estate">Real Estate</option>
+                <option value="home_appliances">Home Appliances</option>
+                <option value="pets">Pet Products</option>
+                <option value="music">Music & Audio</option>
+            </select>
+        </div>
+
+        <!-- Hashtags -->
+        <div class="form-group">
+            <label for="hashtags"><i class="bi bi-hash"></i> Keywords / Hashtags</label>
+            <input type="text" id="hashtags" name="hashtags" class="form-control"
+                placeholder="#tech, #fitness, #luxury">
+        </div>
+
+        <!-- Collaboration Type -->
+        <div class="form-group">
+            <label for="collab_type"><i class="bi bi-people-fill"></i> Collaboration Type</label>
+            <select id="collab_type" name="collab_type" class="form-control">
+                <option value="sponsored_post">Sponsored Post</option>
+                <option value="giveaway">Giveaway</option>
+                <option value="product_review">Product Review</option>
+                <option value="unboxing">Unboxing</option>
+                <option value="long_term">Long-Term Collaboration</option>
+            </select>
+        </div>
+
+        <!-- Location Targeting -->
+        <div class="form-group">
+            <label for="location"><i class="bi bi-geo-alt"></i> Target Location</label>
+            <input type="text" id="location" name="location" class="form-control"
+                placeholder="e.g., India, USA, Europe">
+        </div>
+
+        <!-- Start / End Date -->
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="start_date"><i class="bi bi-calendar-check"></i> Start Date</label>
+                <input type="date" id="start_date" name="start_date" class="form-control" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="end_date"><i class="bi bi-calendar-x"></i> End Date</label>
+                <input type="date" id="end_date" name="end_date" class="form-control" required>
+            </div>
+        </div>
+
+        <!-- Media Upload -->
+        <div class="form-group">
+            <label for="media"><i class="bi bi-upload"></i> Upload Media (Optional)</label>
+            <input type="file" id="media" name="media" class="form-control">
+        </div>
+
+        <!-- AI Suggestions -->
+        <!-- <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="ai_suggestions" name="ai_suggestions">
+            <label class="form-check-label" for="ai_suggestions">Enable AI-Powered Influencer Suggestions</label>
+        </div> -->
+
+        <!-- AI Suggestion Toggle -->
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="ai_suggestions" name="ai_suggestions">
+            <label class="form-check-label" for="ai_suggestions">Enable AI-Powered Influencer Suggestions</label>
+        </div>
+
+        <!-- Preview Box -->
+        <div id="aiSuggestionsPreview" class="card border-info shadow-sm mt-3" style="display: none;">
+            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-stars"></i> Top AI Recommended Influencers</span>
+                <button class="btn btn-sm btn-light text-info" data-toggle="modal" data-target="#allAISuggestionsModal">
+                    View All
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="aiLoading" class="text-muted" style="display: none;">Loading AI recommendations...</div>
+                <ul id="aiSuggestionList" class="list-group list-group-flush"></ul>
+            </div>
+        </div>
+
+        <!-- Modal for All AI Suggestions -->
+        <div class="modal fade" id="allAISuggestionsModal" tabindex="-1" role="dialog"
+            aria-labelledby="allAISuggestionsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title" id="allAISuggestionsModalLabel"><i class="bi bi-people-fill"></i> All AI
+                            Recommendations</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <ul id="allAISuggestionsList" class="list-group list-group-flush"></ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Contract Terms -->
+        <!-- T&C Section -->
+        <div class="form-group">
+            <label class="font-weight-bold mb-2"><i class="bi bi-file-earmark-text-fill text-primary"></i>
+                Sponsor-Influencer Terms & Conditions</label>
+
+            <!-- Accordion Toggle Link -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <a class="btn btn-outline-primary btn-sm" data-toggle="collapse" href="#termsAccordion" role="button"
+                    aria-expanded="false" aria-controls="termsAccordion">
+                    <i class="bi bi-chevron-down mr-1"></i> View Terms
+                </a>
+                <a href="{{ url_for('static', filename='docs/terms.pdf') }}" class="btn btn-outline-secondary btn-sm"
+                    download data-toggle="tooltip" title="Download Terms as PDF">
+                    <i class="bi bi-download"></i> PDF
+                </a>
+            </div>
+
+            <!-- Collapsible Card -->
+            <div class="collapse" id="termsAccordion">
+                <div class="card border-primary shadow-sm">
+                    <div class="card-body text-dark" style="font-size: 0.92rem; background-color: #fefefe;">
+                        <ol class="pl-3 mb-0" style="line-height: 1.6;">
+                            <li>All collaborations must follow FTC guidelines and include appropriate disclosures.</li>
+                            <li>Sponsors agree to pay the agreed amount within the defined timeline.</li>
+                            <li>Influencers must deliver content within the agreed timeframe and follow campaign briefs.
+                            </li>
+                            <li>Both parties reserve the right to terminate the agreement in case of breach or
+                                misconduct.</li>
+                            <li>Usage rights for influencer content must be clearly defined in the campaign contract.
+                            </li>
+                            <li>Confidentiality of private campaign data must be maintained by both parties.</li>
+                            <li>Sponsors are responsible for ensuring the legality and safety of their
+                                products/services.</li>
+                            <li>Platform holds no liability for disputes and expects both parties to resolve issues
+                                professionally.</li>
+                            <li>Influencer metrics and performance data will be shared only with the sponsor initiating
+                                the campaign.</li>
+                            <li>Disputes, if any, must be settled amicably or escalated via platform support within 14
+                                days.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agreement Checkbox -->
+        <div class="form-group form-check mt-3">
+            <input type="checkbox" class="form-check-input" id="agree_terms" name="agree_terms" required>
+            <label class="form-check-label" for="agree_terms">I agree to the above Terms & Conditions</label>
+        </div>
+
+
+
+
+
+        <!-- Buttons -->
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Create Campaign</button>
+            <button type="submit" name="save_as_draft" value="1" class="btn btn-outline-secondary ml-2">
+                <i class="bi bi-save"></i> Save as Draft
+            </button>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

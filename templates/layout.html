@@ -1,19 +1,1127 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>Document</title>
+    <title>{% block title %}Influencer Platform{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    {% block css %}
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #8b6cc2;
+            box-shadow: 0 2px 4px rgba(21, 223, 203, 0.1);
+            margin-bottom: 0;
+            padding: 10px 20px;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #ffffff !important;
+            font-size: 1.5rem;
+        }
+
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s, background-color 0.3s;
+            font-weight: bold;
+            /* Make the font bold */
+            font-size: 1.1rem;
+            /* Optional: Increase the font size for better visibility */
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+
+        /* Container */
+        .container {
+            margin-top: 30px;
+            max-width: 900px;
+            /* Limits width on large screens */
+        }
+
+        /* Content Block */
+        .myblock {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #9655cf;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .btn-success,
+        .btn-danger,
+        .btn-warning {
+            color: #fff;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+
+        /* Collapsible sections */
+        .collapse {
+            margin-top: 10px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar-nav .nav-link {
+                padding: 0.75rem 1.5rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+        }
+
+        .avatar {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .dropdown-menu a.dropdown-item:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown-toggle::after {
+            margin-left: 6px;
+        }
+
+        /* Dark mode support */
+        .dark-mode {
+            background-color: #121212 !important;
+            color: #e1e1e1 !important;
+        }
+
+        .dark-mode .dropdown-menu {
+            background-color: #2b2b2b;
+            color: #f8f9fa;
+        }
+    </style>
+    {% endblock %}
 </head>
+
 <body>
+    {% block navbar %}
+    {% endblock %}
+
+    {% if current_user.is_authenticated %}
+    {% if current_user.role == 'sponsor' %}
+    <!-- Navbar for Sponsors -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="{{ url_for('sponsor_dashboard') }}">Sponsor Platform</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('create_campaign') }}">Create a New Campaign</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('my_campaigns') }}">My Campaigns</a>
+                </li>
+                <!-- <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('search_influencers') }}">Search for Influencers</a>
+                        </li> -->
+                <li class="nav-item">
+                    <!-- <button id="recommend-btn" class="btn btn-warning text-dark nav-link" type="button">
+                        <i class="fas fa-robot"></i> AI Recommendations
+                    </button> -->
+                    <button class="btn btn-warning text-dark nav-link" data-toggle="modal"
+                        data-target="#recommendationModal">
+                        <i class="fas fa-robot"></i> AI Recommendations
+                    </button>
+
+                </li>
+
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('my_profile') }}">
+                        <i class="bi bi-person-lines-fill me-2"></i> My Profile
+                    </a>
+                </li> -->
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle me-2"></i>
+                        {{ current_user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown"
+                        style="min-width: 260px;">
+                        <li class="px-3 py-2">
+                            <div class="fw-bold">{{ current_user.username }}</div>
+                            <div class="text-muted small"><i class="bi bi-envelope me-1"></i> {{ current_user.email }}
+                            </div>
+                            <div class="text-muted small"><i class="bi bi-person-badge me-1"></i> {{
+                                current_user.role|capitalize }}</div>
+                            {% if current_user.role == 'sponsor' and sponsor %}
+                            <div class="text-muted small"><i class="bi bi-building"></i> {{ sponsor.company_name }}
+                            </div>
+                            <div class="text-muted small"><i class="bi bi-wallet2"></i> Budget: ${{ sponsor.budget }}
+                            </div>
+                            {% elif current_user.role == 'influencer' and influencer %}
+                            <div class="text-muted small"><i class="bi bi-hash"></i> Niche: {{ influencer.niche }}</div>
+                            <div class="text-muted small"><i class="bi bi-bar-chart-line"></i> {{
+                                influencer.engagement_rate }}% Engagement</div>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ url_for('my_profile') }}"><i
+                                    class="bi bi-person-lines-fill me-2"></i> View Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('update_profile') }}"><i
+                                    class="bi bi-pencil-square me-2"></i> Edit Profile</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="toggleDarkMode()"><i
+                                    class="bi bi-moon-stars me-2"></i> Toggle Dark Mode</a></li>
+                        <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i
+                                    class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+                    </ul>
+                </li>
+
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li> -->
+            </ul>
+        </div>
+    </nav>
+
+
+
+    {% elif current_user.role == 'influencer' %}
+    <!-- Navbar for Influencers -->
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark">
+                <a class="navbar-brand" href="{{ url_for('influencer_dashboard') }}">Influencer Platform</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('ad_requests') }}">Ad Requests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('update_profile') }}">Update Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('search_campaigns') }}">Search for Campaigns</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav> -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="{{ url_for('influencer_dashboard') }}">Influencer Platform</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('ad_requests') }}">Ad Requests</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('update_profile') }}">Update Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('search_campaigns') }}">Search for Campaigns</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-dark" data-toggle="modal" data-target="#aiRecommendModal">
+                        <button class="btn btn-warning btn-sm">
+                            <i class="fas fa-lightbulb"></i> AI Campaign Recommendations
+                        </button>
+                    </a>
+                </li>
+
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('my_profile') }}">
+                        <i class="bi bi-person-lines-fill me-2"></i> My Profile
+                    </a>
+                </li> -->
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle me-2"></i>
+                        {{ current_user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown"
+                        style="min-width: 260px;">
+                        <li class="px-3 py-2">
+                            <div class="fw-bold">{{ current_user.username }}</div>
+                            <div class="text-muted small"><i class="bi bi-envelope me-1"></i> {{ current_user.email }}
+                            </div>
+                            <div class="text-muted small"><i class="bi bi-person-badge me-1"></i> {{
+                                current_user.role|capitalize }}</div>
+                            {% if current_user.role == 'sponsor' and sponsor %}
+                            <div class="text-muted small"><i class="bi bi-building"></i> {{ sponsor.company_name }}
+                            </div>
+                            <div class="text-muted small"><i class="bi bi-wallet2"></i> Budget: ${{ sponsor.budget }}
+                            </div>
+                            {% elif current_user.role == 'influencer' and influencer %}
+                            <div class="text-muted small"><i class="bi bi-hash"></i> Niche: {{ influencer.niche }}</div>
+                            <div class="text-muted small"><i class="bi bi-bar-chart-line"></i> {{
+                                influencer.engagement_rate }}% Engagement</div>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ url_for('my_profile') }}"><i
+                                    class="bi bi-person-lines-fill me-2"></i> View Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('update_profile') }}"><i
+                                    class="bi bi-pencil-square me-2"></i> Edit Profile</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="toggleDarkMode()"><i
+                                    class="bi bi-moon-stars me-2"></i> Toggle Dark Mode</a></li>
+                        <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i
+                                    class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+                    </ul>
+                </li>
+
+
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li> -->
+            </ul>
+        </div>
+    </nav>
+
+    <!-- AI Recommendation Modal -->
+    <div class="modal fade" id="aiRecommendModal" tabindex="-1" role="dialog" aria-labelledby="aiRecommendModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title font-weight-bold" id="aiRecommendModalLabel">
+                        <i class="fas fa-magic text-warning"></i> AI Campaign Recommendations
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form id="ai-campaign-form">
+                        <div class="form-group">
+                            <label for="influencer-category">Category:</label>
+                            <input type="text" id="influencer-category" class="form-control" placeholder="e.g., Tech"
+                                required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="influencer-niche">Niche:</label>
+                            <input type="text" id="influencer-niche" class="form-control"
+                                placeholder="e.g., Smartphones" />
+                        </div>
+
+                        <button id="recommend-campaigns-btn" type="button" class="btn btn-primary btn-block mt-2">
+                            <i class="fas fa-search"></i> Get AI Recommendations
+                        </button>
+
+                    </form>
+
+                    <!-- Results -->
+                    <div id="campaign-recommendations" class="mt-4">
+                        <!-- AI recommendations will be displayed here -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="modal fade" id="aiRecommendModal" tabindex="-1" role="dialog" aria-labelledby="aiRecommendModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aiRecommendModalLabel">AI Campaign Recommendations</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="influencer-category">Category:</label>
+                    <input type="text" id="influencer-category" class="form-control" placeholder="e.g., Tech">
+
+                    <label for="influencer-niche" class="mt-2">Niche:</label>
+                    <input type="text" id="influencer-niche" class="form-control" placeholder="e.g., Smartphones">
+
+                    <button id="recommend-campaigns-btn" class="btn btn-primary mt-3">
+                        <i class="fas fa-search"></i> Get AI Recommendations
+                    </button>
+
+                    <div id="campaign-recommendations" class="mt-3">
+                        <!-- AI recommendations will be displayed here -->
+    <!-- </div>
+                </div>
+            </div>
+        </div>
+    </div>  -->
+
+    {% endif %}
+    {% endif %}
+
+    <!-- Main content -->
+    <div class="container">
+        {% block content %}
+        <!-- Page specific content will go here -->
+        {% endblock %}
+    </div>
+    <!-- ========================================================================================= -->
+    <!-- 🔥 AI Recommendations Modal -->
+    <div id="recommendationModal" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="recommendationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title font-weight-bold" id="recommendationModalLabel">
+                        <i class="fas fa-users text-primary"></i> AI-Based Influencer Recommendations
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body p-4">
+
+                    <!-- 🔽 NEW INPUTS -->
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="category">Select Category:</label>
+                            <select id="category" class="form-control">
+                                <option value="Tech">Tech</option>
+                                <option value="Fitness">Fitness</option>
+                                <option value="Gaming">Gaming</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Beauty">Beauty</option>
+                                <option value="Food">Food</option>
+                                <option value="Lifestyle">Lifestyle</option>
+                                <option value="Health">Health</option>
+                                <option value="Education">Education</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Business">Business</option>
+                                <option value="Parenting">Parenting</option>
+                                <option value="Photography">Photography</option>
+                                <option value="Pets">Pets</option>
+                                <option value="Music">Music</option>
+                                <option value="Cars">Cars</option>
+                                <option value="Movies">Movies</option>
+                                <option value="Books">Books</option>
+                                <option value="Art">Art</option>
+                                <option value="Home Decor">Home Decor</option>
+                                <option value="Spirituality">Spirituality</option>
+                                <option value="Environment">Environment</option>
+                                <option value="DIY">DIY</option>
+                                <option value="Real Estate">Real Estate</option>
+                            </select>
+
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="niche">Select Niche (optional):</label>
+                            <select id="niche" class="form-control">
+                                <option value="">-- None --</option>
+
+                                <optgroup label="Tech">
+                                    <option value="Gadgets">Gadgets</option>
+                                    <option value="Smartphones">Smartphones</option>
+                                    <option value="Wearables">Wearables</option>
+                                    <option value="AI & Robotics">AI & Robotics</option>
+                                </optgroup>
+
+                                <optgroup label="Fitness">
+                                    <option value="Bodybuilding">Bodybuilding</option>
+                                    <option value="Yoga">Yoga</option>
+                                    <option value="HIIT">HIIT</option>
+                                    <option value="Home Workouts">Home Workouts</option>
+                                </optgroup>
+
+                                <optgroup label="Gaming">
+                                    <option value="PC">PC</option>
+                                    <option value="Console">Console</option>
+                                    <option value="Mobile Gaming">Mobile Gaming</option>
+                                    <option value="eSports">eSports</option>
+                                </optgroup>
+
+                                <optgroup label="Fashion">
+                                    <option value="Luxury">Luxury</option>
+                                    <option value="Streetwear">Streetwear</option>
+                                    <option value="Vintage">Vintage</option>
+                                    <option value="Minimalist">Minimalist</option>
+                                </optgroup>
+
+                                <optgroup label="Travel">
+                                    <option value="Adventure Travel">Adventure Travel</option>
+                                    <option value="Solo Travel">Solo Travel</option>
+                                    <option value="Backpacking">Backpacking</option>
+                                    <option value="Luxury Travel">Luxury Travel</option>
+                                </optgroup>
+
+                                <optgroup label="Beauty">
+                                    <option value="Skincare">Skincare</option>
+                                    <option value="Makeup Tutorials">Makeup Tutorials</option>
+                                    <option value="Haircare">Haircare</option>
+                                    <option value="Nail Art">Nail Art</option>
+                                </optgroup>
+
+                                <optgroup label="Food">
+                                    <option value="Healthy Eating">Healthy Eating</option>
+                                    <option value="Baking">Baking</option>
+                                    <option value="Restaurant Reviews">Restaurant Reviews</option>
+                                    <option value="Meal Prep">Meal Prep</option>
+                                </optgroup>
+
+                                <optgroup label="Lifestyle">
+                                    <option value="Daily Vlogs">Daily Vlogs</option>
+                                    <option value="Productivity">Productivity</option>
+                                    <option value="Minimalism">Minimalism</option>
+                                    <option value="Self-Care">Self-Care</option>
+                                </optgroup>
+
+                                <optgroup label="Health">
+                                    <option value="Mental Health">Mental Health</option>
+                                    <option value="Nutrition">Nutrition</option>
+                                    <option value="Holistic Healing">Holistic Healing</option>
+                                    <option value="Supplements">Supplements</option>
+                                </optgroup>
+
+                                <optgroup label="Education">
+                                    <option value="Study Tips">Study Tips</option>
+                                    <option value="EdTech">EdTech</option>
+                                    <option value="Online Learning">Online Learning</option>
+                                    <option value="Language Learning">Language Learning</option>
+                                </optgroup>
+
+                                <optgroup label="Finance">
+                                    <option value="Investing">Investing</option>
+                                    <option value="Cryptocurrency">Cryptocurrency</option>
+                                    <option value="Saving Tips">Saving Tips</option>
+                                    <option value="Budgeting">Budgeting</option>
+                                </optgroup>
+
+                                <optgroup label="Business">
+                                    <option value="Entrepreneurship">Entrepreneurship</option>
+                                    <option value="Startups">Startups</option>
+                                    <option value="Leadership">Leadership</option>
+                                    <option value="Marketing">Marketing</option>
+                                </optgroup>
+
+                                <optgroup label="Parenting">
+                                    <option value="Newborn Care">Newborn Care</option>
+                                    <option value="Toddler Tips">Toddler Tips</option>
+                                    <option value="Parenting Hacks">Parenting Hacks</option>
+                                    <option value="Family Activities">Family Activities</option>
+                                </optgroup>
+
+                                <optgroup label="Photography">
+                                    <option value="Portraits">Portraits</option>
+                                    <option value="Landscape">Landscape</option>
+                                    <option value="Street Photography">Street Photography</option>
+                                    <option value="Editing Tips">Editing Tips</option>
+                                </optgroup>
+
+                                <optgroup label="Pets">
+                                    <option value="Dog Training">Dog Training</option>
+                                    <option value="Cat Care">Cat Care</option>
+                                    <option value="Pet Reviews">Pet Reviews</option>
+                                    <option value="Pet Nutrition">Pet Nutrition</option>
+                                </optgroup>
+
+                                <optgroup label="Music">
+                                    <option value="Instrument Tutorials">Instrument Tutorials</option>
+                                    <option value="Cover Songs">Cover Songs</option>
+                                    <option value="Music Reviews">Music Reviews</option>
+                                    <option value="Indie Artists">Indie Artists</option>
+                                </optgroup>
+
+                                <optgroup label="Cars">
+                                    <option value="Car Reviews">Car Reviews</option>
+                                    <option value="Modifications">Modifications</option>
+                                    <option value="Motorsports">Motorsports</option>
+                                    <option value="Electric Vehicles">Electric Vehicles</option>
+                                </optgroup>
+
+                                <optgroup label="Movies">
+                                    <option value="Movie Reviews">Movie Reviews</option>
+                                    <option value="Film Analysis">Film Analysis</option>
+                                    <option value="TV Shows">TV Shows</option>
+                                    <option value="Trailers & Teasers">Trailers & Teasers</option>
+                                </optgroup>
+
+                                <optgroup label="Books">
+                                    <option value="Book Reviews">Book Reviews</option>
+                                    <option value="Reading Lists">Reading Lists</option>
+                                    <option value="Writing Tips">Writing Tips</option>
+                                    <option value="Poetry">Poetry</option>
+                                </optgroup>
+
+                                <optgroup label="Art">
+                                    <option value="Digital Art">Digital Art</option>
+                                    <option value="Sketching">Sketching</option>
+                                    <option value="Painting">Painting</option>
+                                    <option value="Art Challenges">Art Challenges</option>
+                                </optgroup>
+
+                                <optgroup label="Home Decor">
+                                    <option value="Interior Design">Interior Design</option>
+                                    <option value="DIY Decor">DIY Decor</option>
+                                    <option value="Home Tours">Home Tours</option>
+                                    <option value="Organization Tips">Organization Tips</option>
+                                </optgroup>
+
+                                <optgroup label="Spirituality">
+                                    <option value="Meditation">Meditation</option>
+                                    <option value="Tarot & Astrology">Tarot & Astrology</option>
+                                    <option value="Mindfulness">Mindfulness</option>
+                                    <option value="Energy Healing">Energy Healing</option>
+                                </optgroup>
+
+                                <optgroup label="Environment">
+                                    <option value="Sustainable Living">Sustainable Living</option>
+                                    <option value="Climate Awareness">Climate Awareness</option>
+                                    <option value="Zero Waste">Zero Waste</option>
+                                    <option value="Eco-Friendly Products">Eco-Friendly Products</option>
+                                </optgroup>
+
+                                <optgroup label="DIY">
+                                    <option value="Crafts">Crafts</option>
+                                    <option value="Upcycling">Upcycling</option>
+                                    <option value="Handmade Gifts">Handmade Gifts</option>
+                                    <option value="Home Improvement">Home Improvement</option>
+                                </optgroup>
+
+                                <optgroup label="Real Estate">
+                                    <option value="Buying Tips">Buying Tips</option>
+                                    <option value="Selling Tips">Selling Tips</option>
+                                    <option value="Property Tours">Property Tours</option>
+                                    <option value="Real Estate Investing">Real Estate Investing</option>
+                                </optgroup>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <!-- 🔽 RECOMMENDATIONS TABLE -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Niche</th>
+                                    <th>Followers</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recommendationTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-center">No recommendations yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <input type="hidden" id="sponsor" value="{{ current_user.id }}">
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                    <button type="button" id="recommend-btn" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Get AI Recommendations
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="recommendationModal" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="recommendationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title font-weight-bold" id="recommendationModalLabel">
+                        <i class="fas fa-users text-primary"></i> AI-Based Influencer Recommendations
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body p-4">
+
+                    <!-- 🔽 NEW INPUTS -->
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="category">Select Category:</label>
+                            <select id="category" class="form-control">
+                                <option value="Tech">Tech</option>
+                                <option value="Fitness">Fitness</option>
+                                <option value="Gaming">Gaming</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Travel">Travel</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="niche">Select Niche (optional):</label>
+                            <select id="niche" class="form-control">
+                                <option value="">-- None --</option>
+                                <option value="Gadgets">Gadgets</option>
+                                <option value="Bodybuilding">Bodybuilding</option>
+                                <option value="PC">PC</option>
+                                <option value="Console">Console</option>
+                                <option value="Luxury">Luxury</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 🔽 RECOMMENDATIONS TABLE -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Niche</th>
+                                    <th>Followers</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recommendationTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-center">No recommendations yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                    <button type="button" id="recommend-btn" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Get AI Recommendations
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <div id="recommendationModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">AI-Based Influencer Recommendations</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Niche</th>
+                                <th>Reach</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recommendationTableBody">
+                            <!-- AI Recommendations will be loaded here -->
+    <!-- </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> --> -->
+
+
+
+
+    <!-- ✅ Cleaned and Fixed AI Recommendations Script -->
+    <!-- Just before closing </body> -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const btn = document.getElementById("recommend-campaigns-btn");
+            if (!btn) return;
+
+            btn.addEventListener("click", () => {
+                const category = document.getElementById("influencer-category").value;
+                const niche = document.getElementById("influencer-niche").value;
+                const display = document.getElementById("campaign-recommendations");
+                display.innerHTML = "Loading...";
+
+                fetch("/recommend_campaigns", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ category, niche })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.error) {
+                            display.innerHTML = `<p class="text-danger">${data.error}</p>`;
+                            return;
+                        }
+
+                        if (!data.length) {
+                            display.innerHTML = "<p>No campaign recommendations found.</p>";
+                            return;
+                        }
+
+                        let html = "<ul class='list-group'>";
+                        data.forEach(camp => {
+                            html += `<li class='list-group-item'>
+                      <strong>${camp.name}</strong> — ${camp.category} / ${camp.niche}<br>
+                      <span>Budget: $${camp.budget}</span>
+                      <br><small>Score: ${camp.score ? camp.score.toFixed(2) : 'N/A'}</small>
+                   </li>`;
+                        });
+                        html += "</ul>";
+                        display.innerHTML = html;
+                    })
+                    .catch(err => {
+                        console.error("Error fetching campaigns:", err);
+                        display.innerHTML = `<p class="text-danger">Failed to fetch campaigns.</p>`;
+                    });
+            });
+        });
+
+
+
+    </script>
     
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const btn = document.getElementById("recommend-btn");
+            if (!btn) {
+                console.warn("❌ Button with ID #recommend-btn not found.");
+                return;
+            }
 
-    {% block content %}{% endblock %}
+            btn.addEventListener("click", function () {
+                console.log("✅ Sponsor clicked AI Recommend button");
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>    
+                // Grab input values
+                const sponsorId = document.getElementById("sponsor")?.value;
+                const category = document.getElementById("category")?.value;
+                const niche = document.getElementById("niche")?.value;
+
+                const tableBody = document.getElementById("recommendationTableBody");
+                const loader = document.getElementById("loadingSpinner");
+
+                // Input validation
+                if (!sponsorId || !category) {
+                    alert("Please select Sponsor and Category.");
+                    return;
+                }
+
+                // Show loading
+                tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Loading recommendations...</td></tr>`;
+                if (loader) loader.style.display = "block";
+
+                // Send request
+                fetch("/recommend", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sponsor_id: sponsorId, category, niche })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (loader) loader.style.display = "none";
+                        tableBody.innerHTML = "";
+
+                        if (data.error) {
+                            tableBody.innerHTML = `<tr><td colspan="5" class="text-danger text-center">${data.error}</td></tr>`;
+                            return;
+                        }
+
+                        if (!data.recommendations || data.recommendations.length === 0) {
+                            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No recommendations found.</td></tr>`;
+                            return;
+                        }
+
+                        // Populate table
+                        data.recommendations.forEach(inf => {
+                            const row = tableBody.insertRow();
+                            row.insertCell(0).textContent = inf.name;
+                            row.insertCell(1).textContent = inf.category;
+                            row.insertCell(2).textContent = inf.niche;
+                            row.insertCell(3).textContent = inf.followers;
+                            row.insertCell(4).textContent = parseFloat(inf.engagement_rate).toFixed(2);
+                        });
+
+                        // Show modal
+                        const modal = document.getElementById("recommendationModal");
+                        if (modal) {
+                            $("#recommendationModal").modal("show");
+                        }
+                    })
+                    .catch(err => {
+                        if (loader) loader.style.display = "none";
+                        console.error("❌ Error fetching influencers:", err);
+                        tableBody.innerHTML = `<tr><td colspan="5" class="text-danger text-center">Failed to fetch recommendations.</td></tr>`;
+                    });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const aiCheckbox = document.getElementById("ai_suggestions");
+            const previewBox = document.getElementById("aiSuggestionsPreview");
+            const suggestionList = document.getElementById("aiSuggestionList");
+            const allList = document.getElementById("allAISuggestionsList");
+            const loadingIndicator = document.getElementById("aiLoading");
+            const sponsorId = document.getElementById("sponsor_id")?.value || '';
+
+            const categoryInput = document.getElementById("category");
+            const nicheInput = document.getElementById("hashtags");
+
+            // Fetch recommendations from backend
+            function fetchAISuggestions() {
+                const category = categoryInput?.value || '';
+                const niche = nicheInput?.value || '';
+
+                if (!category) return;
+
+                loadingIndicator.style.display = "block";
+                suggestionList.innerHTML = "";
+                allList.innerHTML = "";
+
+                fetch("/recommend_influencers", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ category, niche })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        loadingIndicator.style.display = "none";
+
+                        if (data.error || !data.recommendations || data.recommendations.length === 0) {
+                            suggestionList.innerHTML = `<li class="list-group-item text-danger">${data.error || 'No suggestions found.'}</li>`;
+                            return;
+                        }
+
+                        // Show top 3 in preview
+                        data.recommendations.slice(0, 3).forEach(inf => {
+                            const item = document.createElement("li");
+                            item.className = "list-group-item d-flex justify-content-between align-items-center";
+                            item.innerHTML = `
+                            <div>
+                                <strong>${inf.name}</strong><br>
+                                <small>${inf.category} — ${inf.niche} | ${inf.followers} followers</small>
+                            </div>
+                        `;
+                            const inviteBtn = createInviteButton(inf.id, sponsorId);
+                            item.appendChild(inviteBtn);
+                            suggestionList.appendChild(item);
+                        });
+
+                        // All AI matches in modal
+                        data.recommendations.forEach(inf => {
+                            const item = document.createElement("li");
+                            item.className = "list-group-item d-flex justify-content-between align-items-center";
+                            item.innerHTML = `
+                            <div>
+                                <strong>${inf.name}</strong><br>
+                                <small>${inf.category} — ${inf.niche} | ${inf.followers} followers</small>
+                            </div>
+                        `;
+                            const inviteBtn = createInviteButton(inf.id, sponsorId);
+                            item.appendChild(inviteBtn);
+                            allList.appendChild(item);
+                        });
+                    })
+                    .catch(err => {
+                        loadingIndicator.style.display = "none";
+                        console.error("Error:", err);
+                        suggestionList.innerHTML = `<li class="list-group-item text-danger">Failed to fetch suggestions.</li>`;
+                    });
+            }
+
+            // Real invite button with backend integration
+            function createInviteButton(influencerId, sponsorId) {
+                const button = document.createElement("button");
+                button.className = "btn btn-outline-primary btn-sm";
+                button.innerText = "Invite";
+
+                button.addEventListener("click", function () {
+                    button.disabled = true;
+                    button.innerHTML = `<i class="bi bi-clock"></i> Inviting...`;
+
+                    fetch("/invite_influencer", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            influencer_id: influencerId,
+                            sponsor_id: sponsorId
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.status === "success") {
+                                button.innerHTML = `<i class="bi bi-check-circle-fill text-success"></i> Invited`;
+                                button.classList.remove("btn-outline-primary");
+                                button.classList.add("btn-success");
+                            } else {
+                                button.innerText = "Invite Failed";
+                                button.classList.add("btn-danger");
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Invite failed:", err);
+                            button.innerText = "Error";
+                            button.classList.add("btn-danger");
+                        });
+                });
+
+                return button;
+            }
+
+            // Toggle AI section
+            aiCheckbox?.addEventListener("change", function () {
+                if (aiCheckbox.checked) {
+                    previewBox.style.display = "block";
+                    fetchAISuggestions();
+                } else {
+                    previewBox.style.display = "none";
+                    suggestionList.innerHTML = "";
+                }
+            });
+
+            // Auto-refresh when category changes
+            categoryInput?.addEventListener("change", () => {
+                if (aiCheckbox.checked) fetchAISuggestions();
+            });
+        });
+    </script>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
+
+
+
+
+
 </body>
+
+</html>
+
+
+
+
+
+
+
+<!-- ========================================================================================= -->
+<!-- Load jQuery & Bootstrap (Place before </body>) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+
 </html>

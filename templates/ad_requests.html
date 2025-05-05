@@ -1,0 +1,147 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card_styles.css') }}">
+
+    <style>
+        body {
+            background-color: #f5f3ff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        .container h2 {
+            text-align: center;
+            color: #8765c2;
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* Card Styling */
+        .card {
+            width: 100%; /* Full width within the column */
+            max-width: 500px; /* Limit the width to keep it from stretching too wide */
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: #8b68c7;
+            color: #fff;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 15px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-body p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .card-footer {
+            background-color: #f0f0f0;
+            padding: 15px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* Button styling */
+        .btn {
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        .btn-success {
+            background-color: #4caf50;
+            border: none;
+        }
+
+        .btn-danger {
+            background-color: #f44336;
+            border: none;
+        }
+
+        .btn-warning {
+            background-color: #ff9800;
+            border: none;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group textarea {
+            font-size: 14px;
+            resize: none;
+            border-radius: 5px;
+        }
+
+        /* Adjust Column Width */
+        .col-sm-12, .col-md-6, .col-lg-6 {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+
+    <h2>Ad Requests</h2>
+    
+    <!-- Ad Requests List -->
+    <div class="row">
+        {% if requests %}
+            {% for request in requests %}
+                <div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Campaign ID: {{ request.campaign_id }}
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Status:</strong> {{ request.status }}</p>
+                            <p><strong>Terms:</strong> {{ request.terms if request.terms else 'N/A' }}</p>
+                            <p><strong>Created At:</strong> {{ request.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                        </div>
+                        <div class="card-footer">
+                            {% if current_user.role == 'sponsor' %}
+                                <form action="{{ url_for('handle_sponsor_ad_request', ad_request_id=request.id) }}" method="POST">
+                                    {% if request.status == 'pending' %}
+                                        <div class="form-group mt-2">
+                                            <label for="terms-{{ request.id }}">Negotiate Terms</label>
+                                            <textarea id="terms-{{ request.id }}" name="terms" class="form-control" rows="3"></textarea>
+                                        </div>
+                                    {% endif %}
+                                    <button type="submit" name="action" value="accept" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check"></i> Accept
+                                    </button>
+                                    <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                    <button type="submit" name="action" value="negotiate" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-exchange-alt"></i> Negotiate
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center">You have no ad requests.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

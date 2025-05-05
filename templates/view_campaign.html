@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+    <h2>{{ campaign.title }}</h2>
+    <p>{{ campaign.description }}</p>
+    <p><strong>Budget:</strong> {{ campaign.budget }}</p>
+    <p><strong>Category:</strong> {{ campaign.category }}</p>
+    <p><strong>Created At:</strong> {{ campaign.created_at }}</p>
+    <a href="{{ url_for('my_campaigns') }}" class="btn btn-primary">Back to My Campaigns</a>
+</div>
+{% endblock %}
